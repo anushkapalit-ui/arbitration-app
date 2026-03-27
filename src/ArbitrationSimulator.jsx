@@ -411,7 +411,7 @@ no explanation, no code fences. Use these exact keys:
   "anthropic-dangerous-direct-browser-access": "true",
 },
         body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",  // always use this model
+          model: "claude-3-haiku-20240307",  // always use this model
           max_tokens: 1000,
           messages: [{ role: "user", content: prompt }],
         }),
