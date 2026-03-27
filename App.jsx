@@ -1,12 +1,17 @@
-import ArbitrationSimulator from './ArbitrationSimulator'
+import React from 'react'
 
 export default function App() {
   return (
-    <div style={{ padding: '50px', background: 'blue', color: 'white', minHeight: '100vh' }}>
-      <h1>THE APP IS WORKING!</h1>
-      <p>If you see this blue screen, your setup is correct.</p>
-      <hr />
-      <ArbitrationSimulator />
+    <div style={{ 
+      height: '100vh', 
+      width: '100vw', 
+      background: 'blue', 
+      color: 'white', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center' 
+    }}>
+      <h1 style={{ fontSize: '40px' }}>THE BLUE BOX IS HERE!</h1>
     </div>
   )
 }
