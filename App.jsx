@@ -1,8 +1,12 @@
 import ArbitrationSimulator from './ArbitrationSimulator'
+
 export default function App() {
   return (
-  <div style={{ padding: '20px', background: 'blue', color: 'white' }}>
-    <h1>The App is working!</h1>
-    <ArbitrationSimulator />
-  </div>
-)
+    <div style={{ padding: '50px', background: 'blue', color: 'white', minHeight: '100vh' }}>
+      <h1>THE APP IS WORKING!</h1>
+      <p>If you see this blue screen, your setup is correct.</p>
+      <hr />
+      <ArbitrationSimulator />
+    </div>
+  )
+}
