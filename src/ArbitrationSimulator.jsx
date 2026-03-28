@@ -359,19 +359,57 @@ export default function ArbitrationSimulator() {
 
   // ── Submit: build prompt → call API → parse JSON ──
   const handleSubmit = async () => {
-console.log("API KEY:", import.meta.env.VITE_ANTHROPIC_API_KEY);
- console.log("KEY LENGTH:", import.meta.env.VITE_ANTHROPIC_API_KEY?.length);
-    // Basic validation – the three most important fields
+    // 1. Basic Validation
     if (!form.disputeType || form.disputeType === DISPUTE_TYPES[0]) {
       setError("Please select a dispute type."); return;
     }
-    if (!form.claimValue.trim()) {
-      setError("Please enter the claim value."); return;
-    }
-    if (!form.jurisdiction.trim()) {
-      setError("Please enter the jurisdiction."); return;
+    if (!form.claimValue.trim() || !form.jurisdiction.trim()) {
+      setError("Please fill in the required fields."); return;
     }
 
+    setError("");
+    setLoading(true);
+    setResult(null);
+
+    // 2. Build the Prompt
+    const prompt = `
+      You are a senior disputes lawyer. Analyse this dispute and respond ONLY with a valid JSON object. 
+      Use these keys: "recommendation" (ARBITRATE/LITIGATE/SETTLE), "reasoning", "risks" (array), "timeline", "advice".
+      
+      Dispute: ${form.disputeType}
+      Value: ${form.claimValue}
+      Jurisdiction: ${form.jurisdiction}
+      Facts: ${form.keyFacts}
+    `.trim();
+
+    try {
+      // 3. Call Gemini API
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        }),
+      });
+
+      const data = await response.json();
+      
+      // 4. Parse Gemini Response
+      const rawText = data.candidates[0].content.parts[0].text;
+      const cleanJson = rawText.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(cleanJson);
+      
+      setResult(parsed);
+    } catch (err) {
+      console.error("Gemini Error:", err);
+      setError("Analysis failed. Please check your API key and connection.");
+    } finally {
+      setLoading(false);
+    }
+  };
     setError("");
     setLoading(true);
     setResult(null);
